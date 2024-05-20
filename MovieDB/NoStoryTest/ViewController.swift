@@ -7,14 +7,8 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
-    }
+class ViewController: UIViewController {
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
-    }
     
     
     lazy var tableView:UITableView = {
@@ -38,13 +32,24 @@ class ViewController: UIViewController, UICollectionViewDataSource {
         return title
     }()
     
+    let themes = ["Popular", "Now Playing", "Upcoming", "Top Rated"]
+    var selectedThemeIndex: IndexPath = IndexPath(item: 0, section: 0)
     lazy var themeCollection: UICollectionView = {
-        let collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 10
+        layout.minimumInteritemSpacing = 10
+        layout.itemSize = CGSize(width: 120, height: 40)
+        
+        
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.translatesAutoresizingMaskIntoConstraints = false
         collection.dataSource = self
-//        collection.delegate = self
+        collection.delegate = self
+        collection.register(ThemeCell.self, forCellWithReuseIdentifier: ThemeCell.identifier)
         return collection
     }()
+
     
     var dataSource:[MovieTitle] = Array(repeating: MovieTitle(title: "Uncharted", imageMovie: UIImage(named: "movie")), count: 10)
     var movieData: [Result] = []
@@ -54,18 +59,25 @@ class ViewController: UIViewController, UICollectionViewDataSource {
         view.backgroundColor = .white
         view.addSubview(appTitle)
         view.addSubview(tableView)
+        view.addSubview(themeCollection)
         
         NSLayoutConstraint.activate([
+            themeCollection.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            themeCollection.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            themeCollection.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            themeCollection.heightAnchor.constraint(equalToConstant: 50),
+            
+            appTitle.topAnchor.constraint(equalTo: themeCollection.bottomAnchor, constant: 8),
+            appTitle.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            appTitle.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            appTitle.heightAnchor.constraint(equalToConstant: 36),
+            
             tableView.topAnchor.constraint(equalTo: appTitle.bottomAnchor, constant: 32),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
-            appTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -28),
-            appTitle.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            appTitle.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            appTitle.heightAnchor.constraint(equalToConstant: 36)
         ])
+
         
         apiRequest()
     }
@@ -127,6 +139,38 @@ extension ViewController:UITableViewDelegate, UITableViewDataSource
         let movieDetailViewController = MovieDetailViewController()
         movieDetailViewController.movieID = movieData[indexPath.row].id
         self.navigationController?.pushViewController(movieDetailViewController, animated: true)
+    }
+}
+
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return themes.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThemeCell.identifier, for: indexPath) as! ThemeCell
+        cell.configure(with: themes[indexPath.item])
+        cell.backgroundColor = indexPath == selectedThemeIndex ? .red : .lightGray
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedThemeIndex = indexPath
+        collectionView.reloadData()
+        
+        // Handle theme change based on selection
+        switch indexPath.item {
+        case 0:
+            print("Popular selected")
+        case 1:
+            print("Now Playing selected")
+        case 2:
+            print("Upcoming selected")
+        case 3:
+            print("Top Rated selected")
+        default:
+            break
+        }
     }
 }
 
