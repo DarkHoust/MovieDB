@@ -7,14 +7,14 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
-    }
+class ViewController: UIViewController /*UICollectionViewDataSource*/ {
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        <#code#>
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        <#code#>
+//    }
     
     
     lazy var tableView:UITableView = {
@@ -37,14 +37,14 @@ class ViewController: UIViewController, UICollectionViewDataSource {
         title.font = UIFont.systemFont(ofSize: 36, weight: .bold)
         return title
     }()
-    
-    lazy var themeCollection: UICollectionView = {
-        let collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
-        collection.translatesAutoresizingMaskIntoConstraints = false
-        collection.dataSource = self
-//        collection.delegate = self
-        return collection
-    }()
+//    
+//    lazy var themeCollection: UICollectionView = {
+//        let collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
+//        collection.translatesAutoresizingMaskIntoConstraints = false
+//        collection.dataSource = self
+////        collection.delegate = self
+//        return collection
+//    }()
     
     var dataSource:[MovieTitle] = Array(repeating: MovieTitle(title: "Uncharted", imageMovie: UIImage(named: "movie")), count: 10)
     var movieData: [Result] = []

@@ -44,10 +44,14 @@ class MovieDetailViewController: UIViewController {
     }()
     
     lazy var genreCollectionView: UICollectionView = {
-        let collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewLayout())
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collection = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collection.translatesAutoresizingMaskIntoConstraints = false
         collection.dataSource = self
         collection.delegate = self
+    
+        collection.register(GenreCollectionViewCell.self, forCellWithReuseIdentifier: GenreCollectionViewCell.identifier)
         return collection
     }()
     
@@ -81,6 +85,7 @@ class MovieDetailViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.movieData = movie
                     self.content()
+                    self.genreCollectionView.reloadData()
                 }
             }
         }
@@ -153,7 +158,11 @@ extension MovieDetailViewController: UICollectionViewDataSource, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = UICollectionViewCell()
+        let cell = genreCollectionView.dequeueReusableCell(withReuseIdentifier: GenreCollectionViewCell.identifier, for: indexPath) as! GenreCollectionViewCell
+        guard let genre = movieData?.genres[indexPath.row].name else {return UICollectionViewCell()}
+        cell.label.text = genre
         return cell
     }
+    
+    
 }
