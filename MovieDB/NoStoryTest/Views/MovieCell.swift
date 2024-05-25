@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class MovieCell: UITableViewCell {
 
@@ -40,21 +41,42 @@ class MovieCell: UITableViewCell {
     }
     
     private func setupLayout() {
-        let movieStackView = UIStackView(arrangedSubviews: [movieImage, titleLabel])
+        let movieStackView = UIStackView()
         movieStackView.axis = .vertical
         movieStackView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(movieStackView)
+        movieStackView.addSubview(movieImage)
+        movieStackView.addSubview(titleLabel)
         
         NSLayoutConstraint.activate([
-            movieStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            movieStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            movieStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            movieStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
+//            movieStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+//            movieStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+//            movieStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
+//            movieStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             
-            movieImage.heightAnchor.constraint(equalTo: movieStackView.heightAnchor, multiplier: 0.8),
-            movieImage.widthAnchor.constraint(equalTo: movieStackView.widthAnchor)
+//            movieImage.heightAnchor.constraint(equalTo: movieStackView.heightAnchor, multiplier: 0.8),
+//            movieImage.widthAnchor.constraint(equalTo: movieStackView.widthAnchor)
         ])
+        
+        movieStackView.snp.makeConstraints { make in
+            make.top.equalTo(contentView.snp.top).offset(10)
+            make.bottom.equalTo(contentView.snp.bottom).offset(-10)
+            make.leading.equalTo(contentView.snp.leading).offset(30)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-30)
+        }
+        
+        movieImage.snp.makeConstraints { make in
+            make.top.equalTo(movieStackView.snp.top)
+            make.width.equalTo(movieStackView.snp.width).inset(10)
+            make.height.equalTo(movieStackView.snp.height).inset(20)
+            make.centerX.equalToSuperview()
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(movieImage.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
+        }
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {

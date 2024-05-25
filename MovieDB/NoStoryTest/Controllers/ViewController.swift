@@ -55,17 +55,28 @@ class ViewController: UIViewController /*UICollectionViewDataSource*/ {
         view.addSubview(appTitle)
         view.addSubview(tableView)
         
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: appTitle.bottomAnchor, constant: 32),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            
-            appTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -28),
-            appTitle.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            appTitle.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            appTitle.heightAnchor.constraint(equalToConstant: 36)
-        ])
+//        NSLayoutConstraint.activate([
+//            tableView.topAnchor.constraint(equalTo: appTitle.bottomAnchor, constant: 32),
+//            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+//            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+//            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+//            
+//            appTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: -28),
+//            appTitle.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+//            appTitle.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+//            appTitle.heightAnchor.constraint(equalToConstant: 36)
+//        ])
+        
+        tableView.snp.makeConstraints { make in
+            make.bottom.leading.trailing.equalToSuperview();
+            make.top.equalTo(appTitle.snp.bottom).offset(32);
+        }
+        
+        appTitle.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(-28);
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(32)
+        }
         
         apiRequest()
     }

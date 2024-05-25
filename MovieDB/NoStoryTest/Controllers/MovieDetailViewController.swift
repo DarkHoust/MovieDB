@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 class MovieDetailViewController: UIViewController {
 
@@ -92,44 +93,80 @@ class MovieDetailViewController: UIViewController {
         task.resume()
     }
     
+    lazy var stackReleaseView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        return stackView
+    }()
+    
     func setupLayout() {
         view.addSubview(scrollMovieDetail)
         scrollMovieDetail.addSubview(movieImage)
         scrollMovieDetail.addSubview(titleLabel)
-        
-        lazy var stackReleaseView: UIStackView = {
-            let stackView = UIStackView()
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.axis = .vertical
-            return stackView
-        }()
-        
         stackReleaseView.addSubview(releaseDateLabel)
-//        stackReleaseView.addSubview(genreCollectionView)
+        stackReleaseView.addSubview(genreCollectionView)
         scrollMovieDetail.addSubview(stackReleaseView)
         
-        NSLayoutConstraint.activate([
-            scrollMovieDetail.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollMovieDetail.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollMovieDetail.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollMovieDetail.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            movieImage.topAnchor.constraint(equalTo: scrollMovieDetail.topAnchor),
-            movieImage.leadingAnchor.constraint(equalTo: scrollMovieDetail.leadingAnchor, constant: 32),
-            movieImage.trailingAnchor.constraint(equalTo: scrollMovieDetail.trailingAnchor, constant: -32),
-            movieImage.widthAnchor.constraint(equalToConstant: 309),
-            movieImage.heightAnchor.constraint(equalToConstant: 424),
-            
-            
-            titleLabel.topAnchor.constraint(equalTo: movieImage.bottomAnchor, constant: 17),
-            titleLabel.leadingAnchor.constraint(equalTo: scrollMovieDetail.leadingAnchor, constant: 32),
-            titleLabel.trailingAnchor.constraint(equalTo: scrollMovieDetail.trailingAnchor, constant: -32),
-            
-            stackReleaseView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 17),
-            stackReleaseView.trailingAnchor.constraint(equalTo: scrollMovieDetail.trailingAnchor, constant: -32),
-            stackReleaseView.leadingAnchor.constraint(equalTo: scrollMovieDetail.leadingAnchor, constant: 32),
-            stackReleaseView.bottomAnchor.constraint(equalTo: scrollMovieDetail.bottomAnchor, constant: -17)
-        ])
+//        NSLayoutConstraint.activate([
+//            scrollMovieDetail.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+//            scrollMovieDetail.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+//            scrollMovieDetail.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+//            scrollMovieDetail.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+//            
+//            movieImage.topAnchor.constraint(equalTo: scrollMovieDetail.topAnchor),
+//            movieImage.leadingAnchor.constraint(equalTo: scrollMovieDetail.leadingAnchor, constant: 32),
+//            movieImage.trailingAnchor.constraint(equalTo: scrollMovieDetail.trailingAnchor, constant: -32),
+//            movieImage.widthAnchor.constraint(equalToConstant: 309),
+//            movieImage.heightAnchor.constraint(equalToConstant: 424),
+//            
+//            
+//            titleLabel.topAnchor.constraint(equalTo: movieImage.bottomAnchor, constant: 17),
+//            titleLabel.leadingAnchor.constraint(equalTo: scrollMovieDetail.leadingAnchor, constant: 32),
+//            titleLabel.trailingAnchor.constraint(equalTo: scrollMovieDetail.trailingAnchor, constant: -32),
+//            
+//            stackReleaseView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 17),
+//            stackReleaseView.trailingAnchor.constraint(equalTo: scrollMovieDetail.trailingAnchor, constant: -32),
+//            stackReleaseView.leadingAnchor.constraint(equalTo: scrollMovieDetail.leadingAnchor, constant: 32),
+//            stackReleaseView.bottomAnchor.constraint(equalTo: scrollMovieDetail.bottomAnchor, constant: -17)
+//        ])
+        
+        scrollMovieDetail.snp.makeConstraints { make in
+            make.top.leading.trailing.bottom.equalToSuperview()
+        }
+        
+        movieImage.snp.makeConstraints { make in
+            make.top.equalTo(scrollMovieDetail.snp.top)
+            make.leading.equalTo(scrollMovieDetail.snp.leading).offset(32)
+            make.trailing.equalTo(scrollMovieDetail.snp.trailing).offset(-32)
+            make.width.equalTo(309)
+            make.height.equalTo(424)
+            make.centerX.equalToSuperview()
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(movieImage.snp.bottom).offset(17)
+            make.leading.equalTo(scrollMovieDetail.snp.leading).offset(32)
+            make.trailing.equalTo(scrollMovieDetail.snp.trailing).offset(-32)
+        }
+        
+        stackReleaseView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(17)
+            make.trailing.equalTo(scrollMovieDetail.snp.trailing).offset(-32)
+            make.leading.equalTo(scrollMovieDetail.snp.leading).offset(32)
+            make.bottom.equalTo(scrollMovieDetail.snp.bottom).offset(-17)
+        }
+        
+        
+        genreCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(releaseDateLabel.snp.bottom).offset(5)
+            make.height.equalTo(22)
+        }
+        
+        releaseDateLabel.snp.makeConstraints { make in
+            make.leading.trailing.top.equalToSuperview()
+        }
     }
     
     func content() {
@@ -161,8 +198,8 @@ extension MovieDetailViewController: UICollectionViewDataSource, UICollectionVie
         let cell = genreCollectionView.dequeueReusableCell(withReuseIdentifier: GenreCollectionViewCell.identifier, for: indexPath) as! GenreCollectionViewCell
         guard let genre = movieData?.genres[indexPath.row].name else {return UICollectionViewCell()}
         cell.label.text = genre
+        
         return cell
     }
-    
     
 }
