@@ -57,6 +57,8 @@
 		3276A92C2BFE37F800D026FC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				60E4E8B22BDD517000095306 /* ViewController.swift */,
+				32DFD2622BF50316004C5E4F /* MovieDetailViewController.swift */,
 				3261F9B62BF908A700C1C025 /* GenreCollectionViewCell.swift */,
 				32DFD2642BF50B05004C5E4F /* MovieDetail.swift */,
 				60AD1C6B2BE90F340021443A /* MovieCell.swift */,
@@ -67,8 +69,6 @@
 		3276A92D2BFE381400D026FC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				60E4E8B22BDD517000095306 /* ViewController.swift */,
-				32DFD2622BF50316004C5E4F /* MovieDetailViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";

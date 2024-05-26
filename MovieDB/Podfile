@@ -7,6 +7,7 @@ target 'NoStoryTest' do
 
   # Pods for NoStoryTest
   pod 'SnapKit', '~> 5.0.0'
+  pod 'Alamofire'
 
 post_install do |installer|
   installer.pods_project.build_configurations.each do |config|
